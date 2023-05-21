@@ -15,26 +15,31 @@ public class TarjetaController {
     private TarjetaService tarjetaService;
 
     @GetMapping("/card/{productId}/number")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<GenerarTarjetaResponse> generarTarjeta(@PathVariable("productId") @Valid Integer request){
         return tarjetaService.generarTarjeta(request);
     }
 
     @PostMapping("/card/enroll")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<ActivarTarjetaResponse> activarTarjeta(@RequestBody @Valid ActivarTarjetaRequest request){
         return tarjetaService.activarTarjeta(request);
     }
 
     @DeleteMapping("/card/{cardId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<BloquearTarjetaResponse> bloquearTarjeta(@PathVariable("cardId") @Valid Long request){
         return tarjetaService.bloquearTarjeta(request);
     }
 
     @PostMapping("/card/balance")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<RecargarSaldoResponse> recargaSaldo(@RequestBody @Valid RecargaSaldoRequest request){
         return tarjetaService.recargarSaldo(request);
     }
 
     @GetMapping("/card/balance/{cardId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<ConsultaSaldoResponse> consultaSaldo(@PathVariable("cardId") @Valid Long request){
         return tarjetaService.consultaSaldo(request);
     }

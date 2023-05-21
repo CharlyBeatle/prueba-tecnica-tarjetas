@@ -15,16 +15,19 @@ public class TransaccionController {
     TransaccionService transaccionService;
 
     @PostMapping("/transaction/purchase")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<TransaccionCompraResponse> compra(@RequestBody @Valid TransaccionCompraRequest request){
         return transaccionService.compra(request);
     }
 
     @GetMapping("/transaction/{transactionId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<ConsultaTransaccionResponse> consultaTransaccion(@PathVariable("transactionId") @Valid Integer request){
         return transaccionService.consultaTransaccion(request);
     }
 
     @PostMapping("/transaction/anulation")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<AnularTransaccionResponse> anularTransaccion(@RequestBody @Valid AnularTransaccionRequest request){
         return transaccionService.anularTransaccion(request);
     }
