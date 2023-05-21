@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2023-05-21T15:58:07" hostname="BOG-DGT4TQ3" time="0.367">
+  <properties/>
+  <testcase name="Cuando_ActivarTarjetaEsOK()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.289"/>
+  <testcase name="Cuando_GenerarTarjetaEsOk()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.017"/>
+  <testcase name="Cuando_BloquearTarjetaFalla()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.012"/>
+  <testcase name="Cuando_RecargarSaldoFalla()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.003"/>
+  <testcase name="Cuando_BloquearTarjetaEsOk()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.003"/>
+  <testcase name="Cuando_RecargarSaldoEsOk()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.004"/>
+  <testcase name="Cuando_ActivarTarjetaEsOK_PeroYaEstaActiva()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.003"/>
+  <testcase name="Cuando_GenerarTarjetaFalla()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.003"/>
+  <testcase name="Cuando_ConsultarSaldoEsOk()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.002"/>
+  <testcase name="Cuando_ConsultaSaldoFalla_TarjetaBloqueada()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.005"/>
+  <testcase name="Cuando_BloquearTarjetaEsOK_PeroTarjetaYaEstaBloqueada()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.003"/>
+  <testcase name="Cuando_RecargarSaldoFalla_TarjetaBloqueada()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.002"/>
+  <testcase name="Cuando_ConsultaSaldoFalla()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.003"/>
+  <testcase name="Cuando_ActivarTarjetaFalla()" classname="com.prueba.tarjeta.servicesTest.impl.TarjetaServiceImplTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TarjetaServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">prueba-tecnica</a> &gt; <a href="index.source.html" class="el_package">com.prueba.tarjeta.services.impl</a> &gt; <span class="el_source">TarjetaServiceImpl.java</span></div><h1>TarjetaServiceImpl.java</h1><pre class="source lang-java linenums">package com.prueba.tarjeta.services.impl;
+
+import com.prueba.tarjeta.dto.errors.ExceptionDeSistema;
+import com.prueba.tarjeta.dto.tarjetaDtos.*;
+import com.prueba.tarjeta.models.Tarjeta;
+import com.prueba.tarjeta.repositories.TarjetaRepository;
+import com.prueba.tarjeta.services.TarjetaService;
+import com.prueba.tarjeta.utils.Constantes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Random;
+
+@Service
+<span class="fc" id="L19">public class TarjetaServiceImpl implements TarjetaService {</span>
+
+    @Autowired
+    private TarjetaRepository tarjetaRepository;
+
+<span class="fc" id="L24">    private static final Random RANDOM = new Random();</span>
+
+    @Override
+    public ResponseEntity&lt;GenerarTarjetaResponse&gt; generarTarjeta(Integer request) {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (request.toString().length() != 6){</span>
+<span class="fc" id="L29">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L30">                    .code(Constantes.LOG_ERROR_001)</span>
+<span class="fc" id="L31">                    .description(Constantes.LOG_ERROR_001_DESCRIPTION)</span>
+<span class="fc" id="L32">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L33">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L34">                    .build();</span>
+        }
+<span class="fc" id="L36">        Tarjeta tarjeta = tarjetaRepository.save(Tarjeta.builder()</span>
+<span class="fc" id="L37">                        .numeroTarjeta(generarNumeroTarjeta(request))</span>
+<span class="fc" id="L38">                        .fechaCreacion(LocalDate.now())</span>
+<span class="fc" id="L39">                        .fechaActivacion(null)</span>
+<span class="fc" id="L40">                        .fechaVencimiento(null)</span>
+<span class="fc" id="L41">                        .saldo(BigDecimal.valueOf(0))</span>
+<span class="fc" id="L42">                        .estado(&quot;Bloqueado&quot;)</span>
+<span class="fc" id="L43">                .build());</span>
+
+<span class="fc" id="L45">        return ResponseEntity.ok(GenerarTarjetaResponse.builder().message(&quot;Tarjeta generada exitosamente con numero: &quot; + tarjeta.getNumeroTarjeta()).build());</span>
+    }
+
+    @Override
+    public ResponseEntity&lt;ActivarTarjetaResponse&gt; activarTarjeta(ActivarTarjetaRequest request) {
+        try {
+<span class="fc" id="L51">            Tarjeta tarjeta = tarjetaRepository.buscarTarjeta(request.getNumeroTarjeta());</span>
+<span class="fc" id="L52">            IClienteTarjeta cliente = tarjetaRepository.buscarClienteTarjeta(request.getNumeroTarjeta());</span>
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            if(tarjeta.getEstado().equals(Constantes.ACTIVO)){</span>
+<span class="fc" id="L55">                return ResponseEntity.ok(ActivarTarjetaResponse.builder()</span>
+<span class="fc" id="L56">                        .message(&quot;La tarjeta que desea activar ya se encuentra activa&quot;)</span>
+<span class="fc" id="L57">                        .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L58">                        .nombreCliente(cliente.getNombre())</span>
+<span class="fc" id="L59">                        .apellidoCliente(cliente.getApellido())</span>
+<span class="fc" id="L60">                        .fechaActivacion(tarjeta.getFechaActivacion())</span>
+<span class="fc" id="L61">                        .fechaVencimiento(tarjeta.getFechaVencimiento())</span>
+<span class="fc" id="L62">                        .build());</span>
+            } else {
+<span class="fc" id="L64">                tarjeta.setEstado(Constantes.ACTIVO);</span>
+<span class="fc" id="L65">                tarjeta.setFechaActivacion(LocalDate.now());</span>
+<span class="fc" id="L66">                tarjeta.setFechaVencimiento(LocalDate.now().plusYears(3));</span>
+<span class="fc" id="L67">                tarjetaRepository.save(tarjeta);</span>
+<span class="fc" id="L68">                return ResponseEntity.ok(ActivarTarjetaResponse.builder()</span>
+<span class="fc" id="L69">                        .message(&quot;La tarjeta ha sido activada correctamente&quot;)</span>
+<span class="fc" id="L70">                        .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L71">                        .nombreCliente(cliente.getNombre())</span>
+<span class="fc" id="L72">                        .apellidoCliente(cliente.getApellido())</span>
+<span class="fc" id="L73">                        .fechaActivacion(tarjeta.getFechaActivacion())</span>
+<span class="fc" id="L74">                        .fechaVencimiento(tarjeta.getFechaVencimiento())</span>
+<span class="fc" id="L75">                        .build());</span>
+            }
+<span class="fc" id="L77">        } catch (Exception e) {</span>
+<span class="fc" id="L78">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L79">                    .code(Constantes.LOG_ERROR_002)</span>
+<span class="fc" id="L80">                    .description(Constantes.LOG_ERROR_002_DESCRIPTION)</span>
+<span class="fc" id="L81">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L82">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L83">                    .build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;BloquearTarjetaResponse&gt; bloquearTarjeta(Long request) {
+        try {
+<span class="fc" id="L90">            Tarjeta tarjeta = tarjetaRepository.buscarTarjeta(request);</span>
+
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            if(tarjeta.getEstado().equals(Constantes.ACTIVO)){</span>
+<span class="fc" id="L93">                tarjeta.setEstado(&quot;Bloqueado&quot;);</span>
+<span class="fc" id="L94">                tarjetaRepository.save(tarjeta);</span>
+<span class="fc" id="L95">                return ResponseEntity.ok(BloquearTarjetaResponse.builder()</span>
+<span class="fc" id="L96">                        .message(&quot;La tarjeta numero &quot; + tarjeta.getNumeroTarjeta() + &quot; ha sido bloqueada&quot;)</span>
+<span class="fc" id="L97">                        .build());</span>
+            } else {
+<span class="fc" id="L99">                return ResponseEntity.ok(BloquearTarjetaResponse.builder()</span>
+<span class="fc" id="L100">                        .message(&quot;La tarjeta numero &quot; + tarjeta.getNumeroTarjeta() +&quot; ya se encuentra bloqueada&quot;)</span>
+<span class="fc" id="L101">                        .build());</span>
+            }
+<span class="fc" id="L103">        } catch (Exception e) {</span>
+<span class="fc" id="L104">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L105">                    .code(Constantes.LOG_ERROR_002)</span>
+<span class="fc" id="L106">                    .description(Constantes.LOG_ERROR_002_DESCRIPTION)</span>
+<span class="fc" id="L107">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L108">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L109">                    .build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;RecargarSaldoResponse&gt; recargarSaldo(RecargaSaldoRequest request) {
+        try {
+<span class="fc" id="L116">            Tarjeta tarjeta = tarjetaRepository.buscarTarjeta(request.getNumeroTarjeta());</span>
+<span class="fc" id="L117">            IClienteTarjeta cliente = tarjetaRepository.buscarClienteTarjeta(request.getNumeroTarjeta());</span>
+
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            if (tarjeta.getEstado().equals(&quot;Activo&quot;)){</span>
+<span class="fc" id="L120">                BigDecimal saldoAnterior = tarjeta.getSaldo();</span>
+<span class="fc" id="L121">                tarjeta.setSaldo(tarjeta.getSaldo().add(request.getBalance()));</span>
+<span class="fc" id="L122">                tarjetaRepository.save(tarjeta);</span>
+
+<span class="fc" id="L124">                return ResponseEntity.ok(RecargarSaldoResponse.builder()</span>
+<span class="fc" id="L125">                        .message(&quot;Se ha cargado el saldo correctamente&quot;)</span>
+<span class="fc" id="L126">                        .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L127">                        .nombreCliente(cliente.getNombre())</span>
+<span class="fc" id="L128">                        .apellidoCliente(cliente.getApellido())</span>
+<span class="fc" id="L129">                        .saldoAnterior(saldoAnterior)</span>
+<span class="fc" id="L130">                        .saldoActual(tarjeta.getSaldo())</span>
+<span class="fc" id="L131">                        .build());</span>
+            }
+<span class="fc" id="L133">            return ResponseEntity.ok(RecargarSaldoResponse.builder()</span>
+<span class="fc" id="L134">                    .message(&quot;Esta tarjeta se encuentra bloqueada&quot;)</span>
+<span class="fc" id="L135">                    .build());</span>
+
+<span class="fc" id="L137">        } catch (Exception e) {</span>
+<span class="fc" id="L138">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L139">                    .code(Constantes.LOG_ERROR_002)</span>
+<span class="fc" id="L140">                    .description(Constantes.LOG_ERROR_002_DESCRIPTION)</span>
+<span class="fc" id="L141">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L142">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L143">                    .build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;ConsultaSaldoResponse&gt; consultaSaldo(Long request) {
+        try {
+<span class="fc" id="L150">            Tarjeta tarjeta = tarjetaRepository.buscarTarjeta(request);</span>
+<span class="fc" id="L151">            IClienteTarjeta cliente = tarjetaRepository.buscarClienteTarjeta(request);</span>
+
+<span class="fc bfc" id="L153" title="All 2 branches covered.">            if (tarjeta.getEstado().equals(&quot;Activo&quot;)) {</span>
+<span class="fc" id="L154">                return ResponseEntity.ok(ConsultaSaldoResponse.builder()</span>
+<span class="fc" id="L155">                        .message(&quot;Consulta de saldo&quot;)</span>
+<span class="fc" id="L156">                        .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L157">                        .nombreCliente(cliente.getNombre())</span>
+<span class="fc" id="L158">                        .apellidoCliente(cliente.getApellido())</span>
+<span class="fc" id="L159">                        .saldo(tarjeta.getSaldo())</span>
+<span class="fc" id="L160">                        .build());</span>
+            }
+<span class="fc" id="L162">            return ResponseEntity.ok(ConsultaSaldoResponse.builder()</span>
+<span class="fc" id="L163">                    .message(&quot;Esta tarjeta se encuentra bloqueada&quot;)</span>
+<span class="fc" id="L164">                    .build());</span>
+
+<span class="fc" id="L166">        } catch (Exception e) {</span>
+<span class="fc" id="L167">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L168">                    .code(Constantes.LOG_ERROR_002)</span>
+<span class="fc" id="L169">                    .description(Constantes.LOG_ERROR_002_DESCRIPTION)</span>
+<span class="fc" id="L170">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L171">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L172">                    .build();</span>
+        }
+    }
+
+    private Long generarNumeroTarjeta(Integer request){
+<span class="fc" id="L177">        Integer numeroAleatorio = RANDOM.nextInt(900000000) + 1000000000;</span>
+<span class="fc" id="L178">        String resultado = String.valueOf(request).concat(String.valueOf(numeroAleatorio));</span>
+<span class="fc" id="L179">        return Long.valueOf(resultado);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

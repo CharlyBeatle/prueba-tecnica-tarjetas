@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsultaTransaccionResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">prueba-tecnica</a> &gt; <a href="index.source.html" class="el_package">com.prueba.tarjeta.dto.transaccionDtos</a> &gt; <span class="el_source">ConsultaTransaccionResponse.java</span></div><h1>ConsultaTransaccionResponse.java</h1><pre class="source lang-java linenums">package com.prueba.tarjeta.dto.transaccionDtos;
+
+import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Getter
+<span class="fc" id="L10">@Setter</span>
+<span class="nc" id="L11">@AllArgsConstructor</span>
+<span class="fc" id="L12">@NoArgsConstructor</span>
+<span class="nc" id="L13">@Builder</span>
+public class ConsultaTransaccionResponse {
+
+<span class="nc" id="L16">    private String message;</span>
+<span class="nc" id="L17">    private String estado;</span>
+<span class="nc" id="L18">    private String detalle;</span>
+<span class="nc" id="L19">    private BigDecimal valor;</span>
+<span class="nc" id="L20">    private LocalDateTime fechaTransaccion;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

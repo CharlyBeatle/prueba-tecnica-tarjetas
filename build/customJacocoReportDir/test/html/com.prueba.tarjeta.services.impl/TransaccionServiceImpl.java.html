@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransaccionServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">prueba-tecnica</a> &gt; <a href="index.source.html" class="el_package">com.prueba.tarjeta.services.impl</a> &gt; <span class="el_source">TransaccionServiceImpl.java</span></div><h1>TransaccionServiceImpl.java</h1><pre class="source lang-java linenums">package com.prueba.tarjeta.services.impl;
+
+import com.prueba.tarjeta.dto.errors.ExceptionDeSistema;
+import com.prueba.tarjeta.dto.tarjetaDtos.IClienteTarjeta;
+import com.prueba.tarjeta.dto.transaccionDtos.*;
+import com.prueba.tarjeta.models.Tarjeta;
+import com.prueba.tarjeta.models.Transaccion;
+import com.prueba.tarjeta.repositories.TarjetaRepository;
+import com.prueba.tarjeta.repositories.TransaccionRepository;
+import com.prueba.tarjeta.services.TransaccionService;
+import com.prueba.tarjeta.utils.Constantes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L23">public class TransaccionServiceImpl implements TransaccionService {</span>
+
+    @Autowired
+    TransaccionRepository transaccionRepository;
+
+    @Autowired
+    TarjetaRepository tarjetaRepository;
+
+    @Override
+    public ResponseEntity&lt;TransaccionCompraResponse&gt; compra(TransaccionCompraRequest request) {
+        try {
+<span class="fc" id="L34">            Tarjeta tarjeta = tarjetaRepository.buscarTarjeta(request.getNumeroTarjeta());</span>
+<span class="fc" id="L35">            IClienteTarjeta cliente = tarjetaRepository.buscarClienteTarjeta(request.getNumeroTarjeta());</span>
+
+<span class="fc bfc" id="L37" title="All 2 branches covered.">            if (tarjeta.getSaldo().compareTo(request.getPrice()) &lt; 0){</span>
+<span class="fc" id="L38">                return ResponseEntity.ok(TransaccionCompraResponse.builder()</span>
+<span class="fc" id="L39">                                .message(&quot;El saldo en la tarjeta es insuficiente para hacer la compra&quot;)</span>
+<span class="fc" id="L40">                                .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L41">                                .nombre(cliente.getNombre())</span>
+<span class="fc" id="L42">                                .apellido(cliente.getApellido())</span>
+<span class="fc" id="L43">                                .saldoAnterior(tarjeta.getSaldo())</span>
+<span class="fc" id="L44">                                .saldoActual(tarjeta.getSaldo())</span>
+<span class="fc" id="L45">                        .build());</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            } else if (LocalDate.now().isAfter(tarjeta.getFechaVencimiento())) {</span>
+<span class="fc" id="L47">                return ResponseEntity.ok(TransaccionCompraResponse.builder()</span>
+<span class="fc" id="L48">                        .message(&quot;La tarjeta se encuentra vencida&quot;)</span>
+<span class="fc" id="L49">                        .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L50">                        .nombre(cliente.getNombre())</span>
+<span class="fc" id="L51">                        .apellido(cliente.getApellido())</span>
+<span class="fc" id="L52">                        .saldoAnterior(tarjeta.getSaldo())</span>
+<span class="fc" id="L53">                        .saldoActual(tarjeta.getSaldo())</span>
+<span class="fc" id="L54">                        .build());</span>
+            }
+<span class="fc" id="L56">            BigDecimal saldoAnterior = tarjeta.getSaldo();</span>
+<span class="fc" id="L57">            tarjeta.setSaldo(tarjeta.getSaldo().subtract(request.getPrice()));</span>
+<span class="fc" id="L58">            tarjetaRepository.save(tarjeta);</span>
+<span class="fc" id="L59">            Transaccion transaccion = transaccionRepository.save(Transaccion.builder()</span>
+<span class="fc" id="L60">                            .idTarjeta(tarjeta.getIdTarjeta())</span>
+<span class="fc" id="L61">                            .estadoTransaccion(&quot;Realizada&quot;)</span>
+<span class="fc" id="L62">                            .detalle(&quot;Compra&quot;)</span>
+<span class="fc" id="L63">                            .precioTransaccion(request.getPrice())</span>
+<span class="fc" id="L64">                            .fechaTransaccion(LocalDateTime.now())</span>
+<span class="fc" id="L65">                    .build());</span>
+
+<span class="fc" id="L67">            return ResponseEntity.ok(TransaccionCompraResponse.builder()</span>
+<span class="fc" id="L68">                            .message(&quot;TransacciÃ³n realizada con Ã©xito, id de transaccion: &quot; + transaccion.getIdTransaccion())</span>
+<span class="fc" id="L69">                            .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L70">                            .nombre(cliente.getNombre())</span>
+<span class="fc" id="L71">                            .apellido(cliente.getApellido())</span>
+<span class="fc" id="L72">                            .saldoAnterior(saldoAnterior)</span>
+<span class="fc" id="L73">                            .compra(request.getPrice())</span>
+<span class="fc" id="L74">                            .saldoActual(tarjeta.getSaldo())</span>
+<span class="fc" id="L75">                            .fechaTransaccion(transaccion.getFechaTransaccion())</span>
+<span class="fc" id="L76">                    .build());</span>
+
+<span class="fc" id="L78">        } catch (Exception e) {</span>
+<span class="fc" id="L79">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L80">                    .code(Constantes.LOG_ERROR_003)</span>
+<span class="fc" id="L81">                    .description(Constantes.LOG_ERROR_003_DESCRIPTION)</span>
+<span class="fc" id="L82">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L83">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L84">                    .build();</span>
+        }
+    }
+
+    @Override
+    public ResponseEntity&lt;ConsultaTransaccionResponse&gt; consultaTransaccion(Integer request) {
+<span class="fc" id="L90">        Optional&lt;Transaccion&gt; transaccion = transaccionRepository.findById(request);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if(!transaccion.isPresent()){</span>
+<span class="fc" id="L92">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L93">                    .code(Constantes.LOG_ERROR_004)</span>
+<span class="fc" id="L94">                    .description(Constantes.LOG_ERROR_004_DESCRIPTION)</span>
+<span class="fc" id="L95">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L96">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L97">                    .build();</span>
+        }
+
+<span class="fc" id="L100">        ConsultaTransaccionResponse response = new ConsultaTransaccionResponse();</span>
+
+<span class="fc" id="L102">        response.setMessage(&quot;Consulta de transacciÃ³n numero: &quot; + transaccion.get().getIdTransaccion());</span>
+<span class="fc" id="L103">        response.setEstado(transaccion.get().getEstadoTransaccion());</span>
+<span class="fc" id="L104">        response.setDetalle(transaccion.get().getDetalle());</span>
+<span class="fc" id="L105">        response.setValor(transaccion.get().getPrecioTransaccion());</span>
+<span class="fc" id="L106">        response.setFechaTransaccion(transaccion.get().getFechaTransaccion());</span>
+
+<span class="fc" id="L108">        return ResponseEntity.ok(response);</span>
+    }
+
+    @Override
+    public ResponseEntity&lt;AnularTransaccionResponse&gt; anularTransaccion(AnularTransaccionRequest request) {
+<span class="fc" id="L113">        Optional&lt;Transaccion&gt; transaccion = transaccionRepository.findById(request.getIdTransaccion());</span>
+<span class="fc" id="L114">        LocalDateTime fechaLimite = LocalDateTime.now().minusHours(24);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if(!transaccion.isPresent()){</span>
+<span class="fc" id="L116">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L117">                    .code(Constantes.LOG_ERROR_004)</span>
+<span class="fc" id="L118">                    .description(Constantes.LOG_ERROR_004_DESCRIPTION)</span>
+<span class="fc" id="L119">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L120">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L121">                    .build();</span>
+
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        } else if (transaccion.get().getEstadoTransaccion().equals(&quot;Anulada&quot;)) {</span>
+<span class="fc" id="L124">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L125">                    .code(Constantes.LOG_ERROR_006)</span>
+<span class="fc" id="L126">                    .description(Constantes.LOG_ERROR_006_DESCRIPTION)</span>
+<span class="fc" id="L127">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L128">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L129">                    .build();</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        }else if (transaccion.get().getFechaTransaccion().isBefore(fechaLimite)) {</span>
+<span class="fc" id="L131">            throw ExceptionDeSistema.builder()</span>
+<span class="fc" id="L132">                    .code(Constantes.LOG_ERROR_005)</span>
+<span class="fc" id="L133">                    .description(Constantes.LOG_ERROR_005_DESCRIPTION)</span>
+<span class="fc" id="L134">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L135">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="fc" id="L136">                    .build();</span>
+        }
+        try {
+<span class="fc" id="L139">            Tarjeta tarjeta = tarjetaRepository.buscarTarjeta(request.getNumeroTarjeta());</span>
+<span class="fc" id="L140">            IClienteTarjeta cliente = tarjetaRepository.buscarClienteTarjeta(request.getNumeroTarjeta());</span>
+
+<span class="fc" id="L142">            BigDecimal saldoAnterior = tarjeta.getSaldo();</span>
+<span class="fc" id="L143">            transaccion.get().setEstadoTransaccion(&quot;Anulada&quot;);</span>
+<span class="fc" id="L144">            transaccion.get().setFechaTransaccion(LocalDateTime.now());</span>
+<span class="fc" id="L145">            tarjeta.setSaldo(tarjeta.getSaldo().add(transaccion.get().getPrecioTransaccion()));</span>
+
+<span class="fc" id="L147">            transaccionRepository.save(transaccion.get());</span>
+<span class="fc" id="L148">            tarjetaRepository.save(tarjeta);</span>
+
+<span class="fc" id="L150">            return ResponseEntity.ok(AnularTransaccionResponse.builder()</span>
+<span class="fc" id="L151">                            .message(&quot;La transaccion numero &quot; + transaccion.get().getIdTransaccion() + &quot; se ha anulado con Ã©xito&quot;)</span>
+<span class="fc" id="L152">                            .numeroTarjeta(tarjeta.getNumeroTarjeta())</span>
+<span class="fc" id="L153">                            .nombre(cliente.getNombre())</span>
+<span class="fc" id="L154">                            .apellido(cliente.getApellido())</span>
+<span class="fc" id="L155">                            .saldoAnterior(saldoAnterior)</span>
+<span class="fc" id="L156">                            .compra(transaccion.get().getPrecioTransaccion())</span>
+<span class="fc" id="L157">                            .saldoActual(tarjeta.getSaldo())</span>
+<span class="fc" id="L158">                            .fechaTransaccion(LocalDateTime.now())</span>
+<span class="fc" id="L159">                    .build());</span>
+
+<span class="nc" id="L161">        } catch (Exception e) {</span>
+<span class="nc" id="L162">            throw ExceptionDeSistema.builder()</span>
+<span class="nc" id="L163">                    .code(Constantes.LOG_ERROR_003)</span>
+<span class="nc" id="L164">                    .description(Constantes.LOG_ERROR_003_DESCRIPTION)</span>
+<span class="nc" id="L165">                    .httpStatus(HttpStatus.BAD_REQUEST)</span>
+<span class="nc" id="L166">                    .tecError(Constantes.VALIDATION_ERROR)</span>
+<span class="nc" id="L167">                    .build();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,6 @@
+projectKey=Prueba-tecnica-tarjeta
+serverUrl=http://localhost:8090
+serverVersion=9.5.0.56709
+dashboardUrl=http://localhost:8090/dashboard?id=Prueba-tecnica-tarjeta
+ceTaskId=AYg_CLGECpnotQCObWHX
+ceTaskUrl=http://localhost:8090/api/ce/task?id=AYg_CLGECpnotQCObWHX
