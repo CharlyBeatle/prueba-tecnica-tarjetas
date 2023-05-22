@@ -62,9 +62,11 @@ public class TarjetaServiceImpl implements TarjetaService {
                         .build());
             } else {
                 tarjeta.setEstado(Constantes.ACTIVO);
+                tarjeta.setIdCliente(1);
                 tarjeta.setFechaActivacion(LocalDate.now());
                 tarjeta.setFechaVencimiento(LocalDate.now().plusYears(3));
                 tarjetaRepository.save(tarjeta);
+                cliente = tarjetaRepository.buscarClienteTarjeta(request.getNumeroTarjeta());
                 return ResponseEntity.ok(ActivarTarjetaResponse.builder()
                         .message("La tarjeta ha sido activada correctamente")
                         .numeroTarjeta(tarjeta.getNumeroTarjeta())

@@ -23,8 +23,6 @@ t
 Dsrc/main/java/com/prueba/tarjeta/repositories/TarjetaRepository.java,3\2\3284a4ec09fa0c6960341a6b9ba736f0e2958288
 x
 Hsrc/main/java/com/prueba/tarjeta/repositories/TransaccionRepository.java,f\4\f4105515af876c63eb610e8f08a4b8285d28e0b9
-m
-=src/main/java/com/prueba/tarjeta/services/TarjetaService.java,3\4\34b211134510fbe3e8d9ee8e2db4e24a2dcf8543
 {
 Ksrc/main/java/com/prueba/tarjeta/dto/tarjetaDtos/ConsultaSaldoResponse.java,6\c\6cac121923acfe0fb0cad243cdbbfea0f4f4209d
 h
@@ -51,8 +49,6 @@ Ksrc/main/java/com/prueba/tarjeta/dto/tarjetaDtos/ActivarTarjetaRequest.java,6\
 Rsrc/test/java/com/prueba/tarjeta/servicesTest/impl/TransaccionServiceImplTest.java,3\e\3eeb3cbe586246cb67480aad4074a9e9929ce1fc
 m
 =src/test/java/com/prueba/tarjeta/objetosMock/ObjetosMock.java,7\8\782ef14e5776e3255cbc2d2d7b6f0e2d795da309
-v
-Fsrc/main/java/com/prueba/tarjeta/services/impl/TarjetaServiceImpl.java,e\2\e2a9a19ecab3cba67aa1b14af176f43eda4bff43
 ~
 Nsrc/test/java/com/prueba/tarjeta/servicesTest/impl/TarjetaServiceImplTest.java,9\a\9a67209906edd71031f27112b6d3469b52e2505e
 e
@@ -65,8 +61,6 @@ z
 Jsrc/test/java/com/prueba/tarjeta/controllerTest/TarjetaControllerTest.java,9\6\965a22cf9048d65ec55156ba14f30eebb458f8fc
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
-S
-#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
@@ -78,3 +72,9 @@ h
 8src/main/java/com/prueba/tarjeta/TarjetaApplication.java,7\4\7407f3006809d495b60e79f438bd1ed6aec82f73
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+m
+=src/main/java/com/prueba/tarjeta/services/TarjetaService.java,3\4\34b211134510fbe3e8d9ee8e2db4e24a2dcf8543
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+v
+Fsrc/main/java/com/prueba/tarjeta/services/impl/TarjetaServiceImpl.java,e\2\e2a9a19ecab3cba67aa1b14af176f43eda4bff43
