@@ -1,6 +1,4 @@
 
-h
-8src/main/java/com/prueba/tarjeta/TarjetaApplication.java,7\4\7407f3006809d495b60e79f438bd1ed6aec82f73
 u
 Esrc/main/java/com/prueba/tarjeta/dto/tarjetaDtos/IClienteTarjeta.java,3\4\340a80b9fa046385f24c4cf69c4695722d89d99a
 s
@@ -67,3 +65,16 @@ z
 Jsrc/test/java/com/prueba/tarjeta/controllerTest/TarjetaControllerTest.java,9\6\965a22cf9048d65ec55156ba14f30eebb458f8fc
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+v
+Fsrc/main/java/com/prueba/tarjeta/controller/TransaccionController.java,4\5\45c7afa07e4b90d7e20bacc30e8cc003925bc0f6
+r
+Bsrc/main/java/com/prueba/tarjeta/controller/TarjetaController.java,f\4\f4c0e4faa1c349b51b96fe8e8406dde83e1b766e
+h
+8src/main/java/com/prueba/tarjeta/TarjetaApplication.java,7\4\7407f3006809d495b60e79f438bd1ed6aec82f73
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35

@@ -4,9 +4,9 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    url: ${DATABASE_URL:jdbc:mysql://database-prueba-tecnica.cwbu7u2klzpq.us-east-2.rds.amazonaws.com:3306/prueba-tecnica-tarjetas?useSSL=false&serverTimezone=UTC}
+    username: ${DATABASE_USERNAME:admin}
+    password: ${DATABASE_PASSWORD:Beatles1?}
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
